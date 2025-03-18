@@ -4,18 +4,28 @@ import DefaultLayout from "@/layouts/default";
 import UserPost from "@/models/post";
 import { Input } from "@heroui/input";
 import { Spacer } from "@heroui/spacer";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import usePostsStore from "@/stores/posts-stores";
+import postsService from "@/services/posts-service";
 
 export default function IndexPage() {
-  const { posts, searchTerm, selectedTag, setSearchTerm, setSelectedTag } = usePostsStore();
+  const { posts, searchTerm, selectedTag, setSearchTerm, setFeed } =
+    usePostsStore();
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const latestPosts = await postsService.getAllPosts();
+      console.log(latestPosts);
+      setFeed(latestPosts);
+    };
+    fetchPosts();
+  }, [setFeed]);
 
   const filteredPosts = useMemo(() => {
     return posts.filter((post: UserPost) =>
-      post.content.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedTag === "" || post.tags.some(tag => tag.source === selectedTag))
-    )
-  }, [posts, searchTerm, selectedTag])
+      post.content.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [posts, searchTerm, selectedTag]);
 
   const lastUpdateAt = new Date().getMinutes();
 
@@ -36,24 +46,9 @@ export default function IndexPage() {
             />
           </div>
 
-          {selectedTag && (
-            <div className="flex justify-between mb-4">
-              <p>Filtered by tag: #{selectedTag}</p>
-              <button
-                onClick={() => setSelectedTag("")}
-                className="text-sm text-red-500 hover:underline"
-              >
-                Clear filter
-              </button>
-            </div>
-          )}
-
           <div className="flex flex-col gap-6">
             {filteredPosts.map((post, index) => (
-              <PostCard
-                key={index}
-                post={post}
-              />
+              <PostCard key={index} post={post} />
             ))}
             {filteredPosts.length <= 0 ? (
               <p className="self-center">No posts found :(</p>

@@ -5,19 +5,11 @@ export default class UserPost {
   content: string;
   date: Date;
   likes: number;
-  tags: PostTag[];
 
-  constructor(
-    author: string,
-    content: string,
-    date: Date,
-    likes: number,
-    tags: PostTag[]
-  ) {
-    this.author = author;
-    this.content = content;
-    this.date = date;
-    this.likes = likes;
-    this.tags = tags;
+  constructor(author: string, content: string, date: Date, likes: number) {
+    this.author = author ?? "";
+    this.content = content ?? "";
+    this.date = date ?? Date.now();
+    this.likes = likes ?? 0;
   }
 }
