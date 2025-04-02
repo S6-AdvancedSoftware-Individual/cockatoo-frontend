@@ -1,9 +1,11 @@
-name: Build and Push Next.js Docker Image
+name: Build and push Cockatoo frontend Docker Image
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   build-and-push:
