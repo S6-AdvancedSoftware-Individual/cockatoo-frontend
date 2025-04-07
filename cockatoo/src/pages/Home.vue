@@ -2,7 +2,10 @@
   <main class="main">
     <div v-if="loading">Loading...</div>
     <div v-else>
-      <v-card v-for="post in posts" :key="post.id" title="test"> {{ post.content }}</v-card>
+      <v-card v-for="post in posts" :key="post.id">
+        <v-card-title>{{ post.authorName || 'Unknown Author' }}</v-card-title>
+        <v-card-text>{{ post.content }}</v-card-text>
+      </v-card>
     </div>
   </main>
 </template>

@@ -1,11 +1,18 @@
 import type { UserPost } from '@/models/UserPost'
+import { useAuth0 } from '@auth0/auth0-vue'
 
 const POSTS_API_URL = 'http://localhost:5000/api/posts'
 
 export default class PostsService {
   static async getPosts(): Promise<UserPost[]> {
+    const token = await useAuth0().getAccessTokenSilently()
+
     try {
-      const response = await fetch(POSTS_API_URL)
+      const response = await fetch(POSTS_API_URL, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       if (!response.ok) {
         throw new Error(`Error fetching posts: ${response.statusText}`)
       }
@@ -14,7 +21,7 @@ export default class PostsService {
         id: post.id,
         title: post.title,
         content: post.content,
-        author: post.author,
+        authorName: post.authorName,
         createdAt: post.createdAt,
       }))
     } catch (error) {

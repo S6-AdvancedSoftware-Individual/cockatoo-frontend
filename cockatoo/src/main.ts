@@ -26,6 +26,7 @@ app.use(
   createAuth0({
     domain: 'dev-duimksifqjvokimg.us.auth0.com',
     clientId: 'QfbEi6Tsuuy2RLuacBEqeIFAItRlvvk3',
+    cacheLocation: 'localstorage',
     authorizationParams: {
       redirect_uri: window.location.origin,
     },
