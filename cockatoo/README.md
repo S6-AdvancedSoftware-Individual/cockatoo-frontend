@@ -26,12 +26,18 @@ npm install
 docker build . -t cockatoo
 ```
 
+new:
+
+```sh
+docker build -t cockatoo-frontend .
+```
+
 ### Run Docker image
 
 Make sure the **host** port matches a callback URL in your OAuth application.
 
 ```sh
-docker run -d -p 5173:80 --name cockatoo-vuejs cockatoo
+docker run -d -p 5173:80 --name cockatoo-frontend
 ```
 
 ### Compile and Hot-Reload for Development

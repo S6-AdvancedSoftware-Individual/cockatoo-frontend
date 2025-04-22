@@ -5,7 +5,9 @@ const POSTS_API_URL = 'http://localhost:5000/api/posts'
 
 export default class PostsService {
   static async getPosts(): Promise<UserPost[]> {
-    const token = await useAuth0().getAccessTokenSilently()
+    const auth = useAuth0()
+
+    const token = await auth.getAccessTokenSilently()
 
     try {
       const response = await fetch(POSTS_API_URL, {
