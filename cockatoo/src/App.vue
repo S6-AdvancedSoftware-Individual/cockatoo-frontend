@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import Home from '@/pages/Home.vue'
-import Privacy from '@/pages/privacy.vue'
+import Privacy from '@/pages/Privacy.vue'
 import NotFound from '@/pages/NotFound.vue'
 import UserAuth from '@/components/auth/UserAuth.vue'
 
