@@ -1,11 +1,13 @@
 <script setup>
 import { ref, computed } from 'vue'
 import Home from '@/pages/Home.vue'
+import Privacy from '@/pages/privacy.vue'
 import NotFound from '@/pages/NotFound.vue'
 import UserAuth from '@/components/auth/UserAuth.vue'
 
 const routes = {
   '/': Home,
+  '/privacy': Privacy,
 }
 
 const currentPath = ref(window.location.hash)
@@ -25,6 +27,7 @@ const currentView = computed(() => {
       <v-toolbar-title>Cockatoo</v-toolbar-title>
       <v-toolbar-items>
         <v-btn text @click="currentPath = '#/'">Home</v-btn>
+        <v-btn text @click="currentPath = '#/privacy'">Privacy</v-btn>
         <UserAuth />
       </v-toolbar-items>
     </v-app-bar>
