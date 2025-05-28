@@ -9,4 +9,4 @@ FROM nginx:stable-alpine AS production-stage
 RUN mkdir /app
 COPY --from=build-stage /app/dist /app
 COPY nginx.conf /etc/nginx/nginx.conf
-EXPOSE 3000
+EXPOSE 80
