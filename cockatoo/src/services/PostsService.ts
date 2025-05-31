@@ -1,6 +1,6 @@
 import type { UserPost } from '@/models/UserPost'
 
-const GATEWAY_BASE_URL = import.meta.env.VITE_GATEWAY_BASE_URL || 'http://131.189.140.124:5000'
+const GATEWAY_BASE_URL = import.meta.env.VITE_GATEWAY_BASE_URL || 'https://131.189.152.107.nip.io'
 const POSTS_API_URL = GATEWAY_BASE_URL + '/api/posts'
 
 export default class PostsService {
