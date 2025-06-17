@@ -2,7 +2,9 @@ import type { UserAccount } from '@/models/UserAccount'
 
 const GATEWAY_BASE_URL = import.meta.env.VITE_GATEWAY_BASE_URL || 'https://131.189.152.107.nip.io'
 const ACCOUNTS_API_URL = GATEWAY_BASE_URL + '/api/accounts'
-const DELETE_ACCOUNT_URL = import.meta.env.VITE_AZURE_FUNCTION_FORGET_ME_URL
+const DELETE_ACCOUNT_URL =
+  import.meta.env.VITE_AZURE_FUNCTION_FORGET_ME_URL ||
+  'https://righttobeforgotten.azurewebsites.net/api/ForgetMe'
 
 export default class AccountsService {
   static async retrieveAccount(userId: string): Promise<UserAccount> {
