@@ -7,6 +7,35 @@ const DELETE_ACCOUNT_URL =
   'https://righttobeforgotten.azurewebsites.net/api/ForgetMe'
 
 export default class AccountsService {
+  static async getMe(auth0UserId: string): Promise<UserAccount | null> {
+    if (!auth0UserId) {
+      console.error('Auth0 user ID is required to retrieve account')
+      return null
+    }
+
+    try {
+      const response = await fetch(`${ACCOUNTS_API_URL}/me/${auth0UserId}`)
+
+      if (!response.ok) {
+        console.error(`Error fetching account: ${response.statusText}`)
+        return null
+      }
+
+      const data = await response.json()
+      return {
+        id: data.id,
+        username: data.username,
+        createdAt: new Date(data.creationAt),
+        lastUpdatedAt: data.lastUpdatedAt ? new Date(data.lastUpdatedAt) : null,
+        role: data.role,
+        auth0UserId: data.auth0UserId,
+      } as UserAccount
+    } catch (error: any) {
+      console.error('Failed to retrieve account:', error)
+      return null
+    }
+  }
+
   static async retrieveAccount(userId: string): Promise<UserAccount> {
     try {
       const response = await fetch(`${ACCOUNTS_API_URL}/${userId}`)
