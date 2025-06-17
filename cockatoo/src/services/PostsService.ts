@@ -79,4 +79,44 @@ export default class PostsService {
       throw error
     }
   }
+
+  static async createPost(
+    title: string,
+    content: string,
+    authorName: string,
+    authorId: string,
+  ): Promise<UserPost> {
+    try {
+      const response = await fetch(POSTS_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          content,
+          authorName,
+          authorId,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Error creating post: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      return {
+        id: data.id,
+        title: data.title,
+        content: data.content,
+        authorName: data.authorName,
+        authorId: data.authorId,
+        createdAt: data.createdAt,
+      }
+    } catch (error: any) {
+      console.error('Failed to create post:', error)
+      showBanner('Error creating post', { color: 'error', icon: 'mdi-check-circle' })
+      throw error
+    }
+  }
 }

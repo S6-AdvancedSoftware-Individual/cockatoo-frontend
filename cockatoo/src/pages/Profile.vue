@@ -95,6 +95,35 @@
           <div type="info">This user has no posts.</div>
         </div>
       </div>
+      <div class="ma-4">
+        <v-btn color="primary" @click="showAddPost = true">
+          <v-icon left>mdi-plus</v-icon>
+          Add Post
+        </v-btn>
+      </div>
+      <v-dialog v-model="showAddPost" max-width="500">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Add New Post</span>
+          </v-card-title>
+          <v-card-text>
+            <v-text-field v-model="newPost.title" label="Title" required />
+            <v-textarea v-model="newPost.content" label="Content" required />
+            <v-text-field
+              v-model="newPost.authorId"
+              label="Author ID"
+              :value="account?.id"
+              required
+              :readonly="true"
+            />
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="showAddPost = false">Cancel</v-btn>
+            <v-btn color="blue darken-1" text @click="addPost">Add</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <div class="side-panel">
         <div class="side-panel-header">
           <h3>Profile logs</h3>
@@ -131,11 +160,44 @@ const account = ref<UserAccount | null>(null)
 const posts = ref<UserPost[]>([])
 const loading = ref(true)
 
+const showAddPost = ref(false)
+const newPost = reactive({
+  title: '',
+  content: '',
+  authorId: '',
+})
+
 function formatDate(date: Date) {
   return date.toLocaleString()
 }
 
-// Update fetchAccount to call checkIsCurrentUser instead of checkCanEdit
+async function addPost() {
+  try {
+    newPost.authorId = account.value?.id || userId
+    if (!newPost.title || !newPost.content || !newPost.authorId) {
+      logStore.addLog('Missing required post fields')
+      return
+    }
+    logStore.addLog(`Adding new post: ${newPost.title}`)
+    const token = await getAccessTokenSilently()
+    await PostsService.createPost(
+      newPost.title,
+      newPost.content,
+      account.value?.username || 'N/A',
+      newPost.authorId,
+    )
+
+    posts.value = await PostsService.fetchByUserId(userId)
+    logStore.addLog('Post added successfully')
+    showAddPost.value = false
+
+    newPost.title = ''
+    newPost.content = ''
+  } catch (e) {
+    logStore.addLog('Failed to add post')
+  }
+}
+
 async function fetchAccount() {
   loading.value = true
   logStore.addLog(`Fetching profile for user ID: ${userId}`)

@@ -6,7 +6,7 @@ import { useBanner } from '@/composables/useBanner'
 import { useAuth0 } from '@auth0/auth0-vue'
 import AccountsService from './services/AccountsService'
 
-const { isAuthenticated, user } = useAuth0()
+const auth0 = useAuth0()
 const { show, color } = useBanner()
 const currentPath = ref(window.location.hash)
 
@@ -21,12 +21,10 @@ const currentView = computed(() => {
 const internalUserId = ref(null)
 
 watchEffect(async () => {
-  if (isAuthenticated.value && user.value?.sub) {
-    const res = await AccountsService.getMe(user.value?.sub)
-    if (res.ok) {
-      const data = await res.json()
-      internalUserId.value = data.id
-    }
+  if (auth0.isAuthenticated.value && auth0.user.value?.sub) {
+    console.log('Fetching me for', auth0.user.value.sub)
+    const account = await AccountsService.getMe(auth0.user.value?.sub)
+    internalUserId.value = account.id
   }
 })
 </script>
@@ -36,10 +34,8 @@ watchEffect(async () => {
     <v-app-bar app color="primary" dark>
       <v-toolbar-title>Cockatoo</v-toolbar-title>
       <v-toolbar-items>
-        <template v-if="isAuthenticated.value && internalUserId.value">
-          <router-link :to="`/profile/${internalUserId.value}`" class="author-link">
-            <v-btn text> Account </v-btn>
-          </router-link>
+        <template v-if="auth0.isAuthenticated && internalUserId">
+          <v-btn text :to="`/profile/${internalUserId}`" tag="router-link"> Account </v-btn>
         </template>
         <v-btn text to="/" tag="router-link">Home</v-btn>
         <v-btn text to="/privacy" tag="router-link">Privacy</v-btn>
