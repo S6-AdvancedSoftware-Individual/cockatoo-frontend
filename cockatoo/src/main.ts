@@ -11,8 +11,10 @@ import { createApp } from 'vue'
 import type { DefineComponent } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
+import router from './router'
 
 const app = createApp(App as DefineComponent)
+app.use(router)
 
 const vuetify = createVuetify({
   icons: {
@@ -31,6 +33,7 @@ app.use(
     authorizationParams: {
       redirect_uri: window.location.origin,
       audience: 'https://localhost:5000',
+      scope: 'openid profile email offline_access',
     },
   }),
 )

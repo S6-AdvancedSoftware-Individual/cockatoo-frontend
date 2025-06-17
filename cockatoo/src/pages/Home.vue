@@ -17,7 +17,11 @@
         <div v-else>
           <v-card v-for="post in posts" :key="post.id" class="post-card ma-2">
             <v-card-title>{{ post.title || 'N/A' }}</v-card-title>
-            <v-card-subtitle>{{ post.authorName || 'N/A' }}</v-card-subtitle>
+            <v-card-subtitle>
+              <router-link :to="`/profile/${post.authorId}`" class="author-link">
+                {{ post.authorName || 'N/A' }}
+              </router-link>
+            </v-card-subtitle>
             <v-card-text>{{ post.content }}</v-card-text>
           </v-card>
         </div>
@@ -223,5 +227,10 @@ export default {
     max-width: 100vw;
     min-width: 0;
   }
+}
+
+.author-link:hover {
+  text-decoration: underline;
+  color: #1976d2; /* Vuetify primary color */
 }
 </style>
