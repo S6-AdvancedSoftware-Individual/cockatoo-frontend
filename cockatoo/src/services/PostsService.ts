@@ -10,10 +10,18 @@ export default class PostsService {
   static async searchPosts(query: string): Promise<UserPost[]> {
     try {
       const response = await fetch(`${POSTS_API_URL}/search?q=${encodeURIComponent(query)}`)
+
+      if (response.status === 404) {
+        console.warn('No posts found for the search query:', query)
+        return []
+      }
+
       if (!response.ok) {
         throw new Error(`Error fetching posts: ${response.statusText}`)
       }
+
       const data = await response.json()
+
       return data.map((post: any) => ({
         id: post.id,
         title: post.title,
@@ -24,8 +32,6 @@ export default class PostsService {
       }))
     } catch (error: any) {
       console.error('Failed to search posts:', error)
-      showBanner('Error retrieving posts', { color: 'error', icon: 'mdi-check-circle' })
-
       throw error
     }
   }
